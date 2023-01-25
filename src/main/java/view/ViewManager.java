@@ -1,6 +1,9 @@
 package view;
 
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
@@ -17,9 +20,15 @@ public class ViewManager {
         mainScene = new Scene(mainPane,WIDTH, HEIGHT);
         mainStage = new Stage();
         mainStage.setScene(mainScene);
+        createButtons();
     }
 
     public Stage getMainStage() {
         return mainStage;
     }
+
+    private void createButtons() {
+
+    }
+
 }
