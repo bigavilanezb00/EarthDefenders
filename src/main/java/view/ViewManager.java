@@ -1,10 +1,15 @@
 package view;
 
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import model.EarthDefendersButton;
+import model.EarthDefendersSubscene;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +34,12 @@ public class ViewManager {
         mainStage.setScene(mainScene);
         createButtons();
         createBackground();
+        createLogo();
+
+        EarthDefendersSubscene subscene = new EarthDefendersSubscene();
+        subscene.setLayoutX(200);
+        subscene.setLayoutY(100);
+        mainPane.getChildren().add(subscene);
     }
 
     public Stage getMainStage() {
@@ -81,4 +92,27 @@ public class ViewManager {
                 BackgroundRepeat.REPEAT, BackgroundPosition.DEFAULT, null);
         mainPane.setBackground(new Background(background));
     }
+
+    private void createLogo() {
+        ImageView logo = new ImageView("file:src/main/java/view/resources/logo.png");
+        logo.setLayoutX(400);
+        logo.setLayoutY(50);
+
+        logo.setOnMouseEntered(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                logo.setEffect(new DropShadow());
+            }
+        });
+
+        logo.setOnMouseExited(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                logo.setEffect(null);
+            }
+        });
+
+        mainPane.getChildren().add(logo);
+    }
+
 }
