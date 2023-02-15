@@ -1,5 +1,6 @@
 package view;
 
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.effect.DropShadow;
@@ -24,6 +25,15 @@ public class ViewManager {
 
     private final static int MENU_BUTTONS_START_X = 100;
     private final static int MENU_BUTTONS_START_Y = 150;
+
+    private EarthDefendersSubscene credistsSubScene;
+    private EarthDefendersSubscene helpSubScene;
+    private EarthDefendersSubscene scoreSubScene;
+    private EarthDefendersSubscene shipChooserSubScene;
+
+    private EarthDefendersSubscene sceneToHide;
+
+
     List<EarthDefendersButton> menuButtons;
 
     public ViewManager () {
@@ -32,14 +42,34 @@ public class ViewManager {
         mainScene = new Scene(mainPane,WIDTH, HEIGHT);
         mainStage = new Stage();
         mainStage.setScene(mainScene);
+        createSubScenes();
         createButtons();
         createBackground();
         createLogo();
+    }
 
-        EarthDefendersSubscene subscene = new EarthDefendersSubscene();
-        subscene.setLayoutX(200);
-        subscene.setLayoutY(100);
-        mainPane.getChildren().add(subscene);
+    private void showSubScene(EarthDefendersSubscene subscene) {
+        if (sceneToHide != null) {
+            sceneToHide.moveSubScene();
+        }
+
+        subscene.moveSubScene();
+        sceneToHide = subscene;
+
+    }
+
+    public void createSubScenes() {
+        credistsSubScene = new EarthDefendersSubscene();
+        mainPane.getChildren().add(credistsSubScene);
+
+        helpSubScene = new EarthDefendersSubscene();
+        mainPane.getChildren().add(helpSubScene);
+
+        scoreSubScene = new EarthDefendersSubscene();
+        mainPane.getChildren().add(scoreSubScene);
+
+        shipChooserSubScene = new EarthDefendersSubscene();
+        mainPane.getChildren().add(shipChooserSubScene);
     }
 
     public Stage getMainStage() {
@@ -64,26 +94,63 @@ public class ViewManager {
     private void createStartButton() {
         EarthDefendersButton startButton = new EarthDefendersButton("JUGAR");
         addMenuButton(startButton);
+
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubScene(shipChooserSubScene);
+            }
+        });
+
     }
 
     private void createScoreButton() {
         EarthDefendersButton scoreButton = new EarthDefendersButton("SCORES");
         addMenuButton(scoreButton);
+
+        scoreButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubScene(scoreSubScene);
+            }
+        });
     }
 
     private void createHelpButton() {
         EarthDefendersButton helpButton = new EarthDefendersButton("AYUDA");
         addMenuButton(helpButton);
+
+        helpButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubScene(helpSubScene);
+            }
+        });
     }
 
     private void createCreditsButton() {
         EarthDefendersButton creditsButton = new EarthDefendersButton("CREDITOS");
         addMenuButton(creditsButton);
+
+        creditsButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                showSubScene(credistsSubScene);
+            }
+        });
+
     }
 
     private void createExitButton() {
         EarthDefendersButton exitButton = new EarthDefendersButton("SALIR");
         addMenuButton(exitButton);
+
+        exitButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                mainStage.close();
+            }
+        });
     }
 
     private void createBackground() {
