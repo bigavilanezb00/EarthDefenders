@@ -10,6 +10,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import model.Levels;
 import model.Nave;
 import model.SmallInfoLabel;
 
@@ -26,6 +27,9 @@ public class GameViewManager {
 
     private Stage menuStage;
     private ImageView nave;
+
+    private Levels nivelesLabel;
+    private int niveles;
 
     private boolean isLeftKeyPressed;
     private boolean isRightKeyPressed;
@@ -112,7 +116,11 @@ public class GameViewManager {
         puntosLabel = new SmallInfoLabel("PUNTOS : 00");
         puntosLabel.setLayoutX(460);
         puntosLabel.setLayoutY(20);
+        nivelesLabel = new Levels("NIVELES : 1");
+        nivelesLabel.setLayoutX(10);
+        nivelesLabel.setLayoutY(20);
         gamePane.getChildren().add(puntosLabel);
+        gamePane.getChildren().add(nivelesLabel);
         vidasJugador = new ImageView[3];
 
         for (int i = 0; i < vidasJugador.length; i++) {
@@ -129,7 +137,7 @@ public class GameViewManager {
             gamePane.getChildren().add(meteoroMarron[i]);
         }
         meteoroGris = new ImageView[3];
-        for (int i = 0; i< meteoroGris.length; i++) {
+        for (int i = 0; i < meteoroGris.length; i++) {
             meteoroGris[i] = new ImageView(METEOR_GRIS_IMAGE);
             setNewElementPosition(meteoroGris[i]);
             gamePane.getChildren().add(meteoroGris[i]);
@@ -141,12 +149,12 @@ public class GameViewManager {
         estrella.setLayoutY(estrella.getLayoutY() + 5);
 
         for (int i = 0; i < meteoroMarron.length; i++) {
-            meteoroMarron[i].setLayoutY(meteoroMarron[i].getLayoutY()+7);
-            meteoroMarron[i].setRotate(meteoroMarron[i].getRotate()+4);
+            meteoroMarron[i].setLayoutY(meteoroMarron[i].getLayoutY() + 7);
+            meteoroMarron[i].setRotate(meteoroMarron[i].getRotate() + 4);
         }
         for (int i = 0; i < meteoroGris.length; i++) {
-            meteoroGris[i].setLayoutY(meteoroGris[i].getLayoutY()+7);
-            meteoroGris[i].setRotate(meteoroGris[i].getRotate()+4);
+            meteoroGris[i].setLayoutY(meteoroGris[i].getLayoutY() + 7);
+            meteoroGris[i].setRotate(meteoroGris[i].getRotate() + 4);
         }
     }
 
@@ -170,13 +178,13 @@ public class GameViewManager {
 
     private void setNewElementPosition(ImageView image) {
         image.setLayoutX(randomPositionGenerator.nextInt(370));
-        image.setLayoutY(-(randomPositionGenerator.nextInt(3200)+600));
+        image.setLayoutY(-(randomPositionGenerator.nextInt(3200) + 600));
 
     }
 
     private void createNave(Nave naveElegida) {
         nave = new ImageView(naveElegida.getUrl());
-        nave.setLayoutX(GAME_WIDTH/2);
+        nave.setLayoutX(GAME_WIDTH / 2);
         nave.setLayoutY(GAME_HEIGHT - 90);
         gamePane.getChildren().add(nave);
     }
@@ -197,12 +205,12 @@ public class GameViewManager {
 
     private void moveNave() {
         if (isLeftKeyPressed && !isRightKeyPressed) {
-            if (angle > - 30) {
+            if (angle > -30) {
                 angle -= 5;
             }
             nave.setRotate(angle);
             if (nave.getLayoutX() > -20) {
-                nave.setLayoutX(nave.getLayoutX() -3);
+                nave.setLayoutX(nave.getLayoutX() - 3);
             }
         }
 
@@ -212,24 +220,24 @@ public class GameViewManager {
             }
             nave.setRotate(angle);
             if (nave.getLayoutX() < 522) {
-                nave.setLayoutX(nave.getLayoutX() +3);
+                nave.setLayoutX(nave.getLayoutX() + 3);
             }
         }
 
         if (!isLeftKeyPressed && !isRightKeyPressed) {
             if (angle < 0) {
-                angle +=5;
+                angle += 5;
             } else if (angle > 0) {
-                angle -=5;
+                angle -= 5;
             }
             nave.setRotate(angle);
         }
 
         if (isLeftKeyPressed && isRightKeyPressed) {
             if (angle < 0) {
-                angle +=5;
+                angle += 5;
             } else if (angle > 0) {
-                angle -=5;
+                angle -= 5;
             }
             nave.setRotate(angle);
         }
@@ -242,8 +250,8 @@ public class GameViewManager {
         for (int i = 0; i < 12; i++) {
             ImageView backgroundImage1 = new ImageView(BACKGROUND_IMAGE);
             ImageView backgroundImage2 = new ImageView(BACKGROUND_IMAGE);
-            GridPane.setConstraints(backgroundImage1, i% 3, i / 3);
-            GridPane.setConstraints(backgroundImage2, i% 3, i / 3);
+            GridPane.setConstraints(backgroundImage1, i % 3, i / 3);
+            GridPane.setConstraints(backgroundImage2, i % 3, i / 3);
             gridPane1.getChildren().add(backgroundImage1);
             gridPane2.getChildren().add(backgroundImage2);
         }
@@ -267,31 +275,39 @@ public class GameViewManager {
     }
 
     private void comprobarColisionElementos() {
-        if (RADIO_NAVE + RADIO_ESTRELLA > calcularDistancia(nave.getLayoutX() + 49, estrella.getLayoutX() + 15, nave.getLayoutY() + 37, estrella.getLayoutY()+15)) {
+        if (RADIO_NAVE + RADIO_ESTRELLA > calcularDistancia(nave.getLayoutX() + 49, estrella.getLayoutX() + 15, nave.getLayoutY() + 37, estrella.getLayoutY() + 15)) {
             setNewElementPosition(estrella);
 
             puntos++;
             String textToSet = "PUNTOS : ";
             if (puntos < 10) {
                 textToSet = textToSet + "0";
+
+            }
+
+
+            String nivelDos = "NIVELES : ";
+            if (puntos >= 5 && puntos < 10) {
+                nivelDos = nivelDos + "02";
+
             }
             puntosLabel.setText(textToSet + puntos);
+            nivelesLabel.setText(nivelDos + niveles);
         }
 
         for (int i = 0; i < meteoroMarron.length; i++) {
-            if (RADIO_METEORO + RADIO_NAVE > calcularDistancia(nave.getLayoutX() + 49, meteoroMarron[i].getLayoutX() +20, nave.getLayoutY() +37,meteoroMarron[i].getLayoutY() + 20 )) {
+            if (RADIO_METEORO + RADIO_NAVE > calcularDistancia(nave.getLayoutX() + 49, meteoroMarron[i].getLayoutX() + 20, nave.getLayoutY() + 37, meteoroMarron[i].getLayoutY() + 20)) {
                 eliminarVida();
                 setNewElementPosition(meteoroMarron[i]);
             }
         }
 
         for (int i = 0; i < meteoroGris.length; i++) {
-            if (RADIO_METEORO + RADIO_NAVE > calcularDistancia(nave.getLayoutX() + 49, meteoroGris[i].getLayoutX()+20, nave.getLayoutY()+37, meteoroGris[i].getLayoutY()+20)) {
+            if (RADIO_METEORO + RADIO_NAVE > calcularDistancia(nave.getLayoutX() + 49, meteoroGris[i].getLayoutX() + 20, nave.getLayoutY() + 37, meteoroGris[i].getLayoutY() + 20)) {
                 eliminarVida();
                 setNewElementPosition(meteoroGris[i]);
             }
         }
-
     }
 
     private void eliminarVida() {
@@ -307,5 +323,4 @@ public class GameViewManager {
     private double calcularDistancia( double x1, double x2, double y1, double y2) {
         return Math.sqrt(Math.pow(x1-x2, 2) + Math.pow(y1-y2, 2));
     }
-
 }
