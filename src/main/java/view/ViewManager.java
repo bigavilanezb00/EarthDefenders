@@ -9,8 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import model.EarthDefendersButton;
-import model.EarthDefendersSubscene;
+import model.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +34,9 @@ public class ViewManager {
 
 
     List<EarthDefendersButton> menuButtons;
+
+    List<ElegirNave> listaNaves;
+    private Nave naveEligida;
 
     public ViewManager () {
         menuButtons = new ArrayList<>();
@@ -67,9 +69,63 @@ public class ViewManager {
 
         scoreSubScene = new EarthDefendersSubscene();
         mainPane.getChildren().add(scoreSubScene);
+        
+        creteElegirNaveSubScene();
+        
+    }
 
+    private void creteElegirNaveSubScene() {
         shipChooserSubScene = new EarthDefendersSubscene();
         mainPane.getChildren().add(shipChooserSubScene);
+
+        InfoLabel elegirNave = new InfoLabel("ELIGE TU NAVE");
+        elegirNave.setLayoutX(110);
+        elegirNave.setLayoutY(25);
+        shipChooserSubScene.getPane().getChildren().add(elegirNave);
+        shipChooserSubScene.getPane().getChildren().add(createNaveAElegir());
+        shipChooserSubScene.getPane().getChildren().add(createButtonEmpezar());
+
+    }
+
+    private HBox createNaveAElegir() {
+        HBox box = new HBox();
+        box.setSpacing(20);
+        listaNaves = new ArrayList<>();
+        for (Nave nave : Nave.values()) {
+            ElegirNave naveAelegir = new ElegirNave(nave);
+            listaNaves.add(naveAelegir);
+            box.getChildren().add(naveAelegir);
+            naveAelegir.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    for (ElegirNave nave : listaNaves) {
+                        nave.setSiCirculoElegido(false);
+                    }
+                    naveAelegir.setSiCirculoElegido(true);
+                    naveEligida = naveAelegir.getNave();
+                }
+            });
+        }
+        box.setLayoutX(300 - (118*2));
+        box.setLayoutY(100);
+        return box;
+    }
+
+    private EarthDefendersButton createButtonEmpezar() {
+        EarthDefendersButton startButton = new EarthDefendersButton("START");
+        startButton.setLayoutX(350);
+        startButton.setLayoutY(300);
+        startButton.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if (naveEligida != null) {
+                    GameViewManager gameViewManager = new GameViewManager();
+                    gameViewManager.createNewGame(mainStage, naveEligida);
+                }
+            }
+        });
+
+        return startButton;
     }
 
     public Stage getMainStage() {

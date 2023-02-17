@@ -9,7 +9,7 @@ import javafx.util.Duration;
 
 public class EarthDefendersSubscene extends SubScene {
 
-    private final static String FONT_PATH = "file:src/main/java/model/resources/kenvector_future.ttf";
+    private final static String FONT_PATH = "src/main/java/model/resources/kenvector_future.ttf";
     private final static String BACKGROUND_IMAGE = "file:src/main/java/model/resources/blue_panel.png";
 
     private boolean isHidden;
@@ -44,6 +44,10 @@ public class EarthDefendersSubscene extends SubScene {
         }
 
         transition.play();
+    }
+
+    public AnchorPane getPane() {
+        return (AnchorPane) this.getRoot();
     }
 
 }
